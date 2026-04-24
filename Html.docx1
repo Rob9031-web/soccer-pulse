@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Soccer Pulse - Live Scores</title>
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial;
+    background: #0b1727;
+    color: white;
+}
+
+header {
+    background: #1e90ff;
+    padding: 15px;
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+nav {
+    background: #111;
+    padding: 10px;
+    text-align: center;
+}
+
+nav a {
+    color: white;
+    margin: 10px;
+    text-decoration: none;
+}
+
+.container {
+    padding: 20px;
+}
+
+.match {
+    background: #162447;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 10px;
+}
+
+.team {
+    font-weight: bold;
+}
+
+.score {
+    font-size: 22px;
+    color: #1e90ff;
+}
+
+footer {
+    text-align: center;
+    padding: 15px;
+    background: #111;
+}
+</style>
+</head>
+
+<body>
+
+<header>⚽ Soccer Pulse - Live Scores</header>
+
+<nav>
+<a href="#">Home</a>
+<a href="#">Live Scores</a>
+<a href="#">News</a>
+</nav>
+
+<div class="container">
+
+<h2>🔴 Live Matches</h2>
+<div id="liveMatches">Loading matches...</div>
+
+<!-- AdSense -->
+<div style="margin-top:20px;">
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-XXXXXXXXXXXX"
+     data-ad-slot="1234567890"
+     data-ad-format="auto"></ins>
+</div>
+
+</div>
+
+<footer>© 2026 Soccer Pulse</footer>
+
+<script>
+const API_KEY = "YOUR_API_KEY_HERE";
+
+async function getLiveMatches() {
+    const url = "https://v3.football.api-sports.io/fixtures?live=all";
+
+    const response = await fetch(url, {
+        method: "GET",
+        headers: {
+            "x-apisports-key": API_KEY
+        }
+    });
+
+    const data = await response.json();
+    const matches = data.response;
+
+    const container = document.getElementById("liveMatches");
+    container.innerHTML = "";
+
+    if(matches.length === 0){
+        container.innerHTML = "No live matches right now.";
+        return;
+    }
+
+    matches.forEach(match => {
+        const home = match.teams.home.name;
+        const away = match.teams.away.name;
+        const score = match.goals.home + " - " + match.goals.away;
+        const minute = match.fixture.status.elapsed;
+
+        const div = document.createElement("div");
+        div.className = "match";
+
+        div.innerHTML = `
+            <div class="team">${home} vs ${away}</div>
+            <div class="score">${score}</div>
+            <div>⏱ ${minute}'</div>
+        `;
+
+        container.appendChild(div);
+    });
+}
+
+getLiveMatches();
+setInterval(getLiveMatches, 60000); // refresh every 60 sec
+</script>
+
+</body>
+</html>
+<h2>Privacy Policy</h2>
+<p>This website uses cookies and third-party ads (Google AdSense) to display advertisements.</p>
